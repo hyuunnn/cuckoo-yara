@@ -8,21 +8,22 @@ import codecs
 class CuckooYara(Report):
 
     def httpRequest(self, data):
+        rule = ""
         if data['network']['http']:
-            rule = "rule httpRequest\n"
+            rule += "rule httpRequest\n"
             rule += "{\n"
             rule += "   condition:\n"
             for i in data['network']['http']:
                 rule += "       cuckoo.network.http_request(/{}/) or\n".format(i['host'])
             
             rule = rule[:-4] + "\n}\n"
-        else:
-            rule = ""
+
         return rule
 
     def dnsLookup(self, data):
+        rule = ""
         if data['network']['dns']:
-            rule = "rule dnsLookup\n"
+            rule += "rule dnsLookup\n"
             rule += "{\n"
             rule += "   condition:\n"
             for i in data['network']['dns']:
@@ -30,8 +31,7 @@ class CuckooYara(Report):
                     rule += "       cuckoo.network.dns_lookup(/{}/) or\n".format(i['request'])
             
             rule = rule[:-4] + "\n}\n"
-        else:
-            rule = ""
+
         return rule
 
     def run(self, results):
